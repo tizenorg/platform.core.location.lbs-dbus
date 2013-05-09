@@ -1,0 +1,23 @@
+<node>
+	<interface name="org.tizen.lbs.Manager">
+		<method name="GetProviderInfo">
+			<arg direction="out" type="s" name="Name"/>
+			<arg direction="out" type="s" name="Description"/>
+		</method>
+		<method name="GetStatus">
+			<arg direction="out" type="i" name="status"/>
+		</method>
+		<signal name="StatusChanged">
+			<arg direction="out" type="i" name="status"/>
+		</signal>
+		<method name="SetOptions">
+			<arg direction="in" type="a{sv}" name="options"/>
+		</method>
+		<method name="AddReference">
+			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+		</method>
+		<method name="RemoveReference">
+			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+		</method>
+	</interface>
+</node>

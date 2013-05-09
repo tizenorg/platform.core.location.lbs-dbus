@@ -1,0 +1,15 @@
+<node>
+	<interface name="org.tizen.lbs.Position">
+		<signal name="PositionChanged">
+			<arg type="i" name="fields" />
+			<arg type="i" name="timestamp" />
+			<arg type="d" name="latitude" />
+			<arg type="d" name="longitude" />
+			<arg type="d" name="altitude" />
+			<arg type="d" name="speed" />
+			<arg type="d" name="direction" />
+			<arg type="d" name="climb" />
+			<arg type="(idd)" name="accuracy" />
+		</signal>
+	</interface>
+</node>

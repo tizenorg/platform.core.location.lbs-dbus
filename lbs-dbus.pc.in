@@ -1,0 +1,11 @@
+prefix=@PREFIX@
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: LBS dbus Library
+Description: LBS dbus library
+Requires: glib-2.0 gobject-2.0
+Version: 0.1
+Libs: -L${libdir} -llbs-dbus -llbs-dbus-server
+Cflags: -I${includedir}/lbs-dbus

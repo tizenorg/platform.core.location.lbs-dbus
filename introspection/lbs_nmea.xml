@@ -1,0 +1,8 @@
+<node>
+	<interface name="org.tizen.lbs.Nmea">
+		<signal name="NmeaChanged">
+			<arg type="i" name="timestamp"/>
+			<arg type="s" name="nmea_data"/>
+		</signal>
+	</interface>
+</node>
