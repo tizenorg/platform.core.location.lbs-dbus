@@ -15,10 +15,9 @@ FOREACH(flag ${pkgs_CFLAGS})
 ENDFOREACH(flag)
 
 SET(EXTRA_CFLAGS "${EXTRA_CFLAGS}  -Wl,-zdefs -fvisibility=hidden ")
-SET(CMAKE_EXE_LINKER_FLAGS "-Wl,--as-needed")
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${EXTRA_CFLAGS}")
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wextra -fvisibility=hidden -fPIC")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra -fvisibility=hidden -fPIC")
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-unused-parameter -Wno-missing-field-initializers -Wmissing-declarations -Wcast-align")
 
 ADD_DEFINITIONS("-DFEATURE_DLOG_DEBUG")
@@ -32,9 +31,7 @@ MESSAGE(${CMAKE_EXE_LINKER_FLAGS})
 SET(PREFIX ${CMAKE_INSTALL_PREFIX})
 
 CONFIGURE_FILE(lbs-dbus.pc.in lbs-dbus.pc @ONLY)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/lbs-dbus.pc DESTINATION lib/pkgconfig)
-
-INSTALL(FILES ${CMAKE_SOURCE_DIR}/LICENSE DESTINATION /usr/share/license RENAME liblbs-dbus)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/lbs-dbus.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
 
 ADD_SUBDIRECTORY(client)
 ADD_SUBDIRECTORY(server)

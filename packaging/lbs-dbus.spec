@@ -2,28 +2,24 @@ Name: lbs-dbus
 Summary: Dbus interface for Location based service
 Version: 0.1.6
 Release:    1
-Group:      System/Libraries
-License:    Apache
+Group:      Location/Service
+License:    Apache-2.0
 Source0:    lbs-dbus-%{version}.tar.gz
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gobject-2.0)
 BuildRequires:  pkgconfig(dlog)
-#BuildRequires:  pkgconfig(security-server)
 BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  python
 BuildRequires:  python-xml
-#BuildRequires:  sec-product-features
 
 %description
 LBS dbus interface
 
 %package -n liblbs-dbus
 Summary:    LBS dbus library
-Group:      TO_BE/FILLED_IN
+Group:      Location/Libraries
 Requires(post): sys-assert
 
 %description -n liblbs-dbus
@@ -31,7 +27,7 @@ LBS client API library
 
 %package -n liblbs-dbus-devel
 Summary:    Telephony client API (devel)
-Group:      Development/Libraries
+Group:      Development/Location
 Requires:   liblbs-dbus = %{version}-%{release}
 
 %description -n liblbs-dbus-devel
@@ -43,28 +39,25 @@ LBS client API library (devel)
 
 
 %build
-cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix}
+%cmake . 
 
 
 make %{?jobs:-j%jobs}
 
 %install
-rm -rf %{buildroot}
 %make_install
-mkdir -p %{buildroot}/usr/share/license
 
-%post -p /sbin/ldconfig
+%post -p /sbin/ldconfig -n liblbs-dbus
 
-%postun -p /sbin/ldconfig
+%postun -p /sbin/ldconfig -n liblbs-dbus
 
 
 %files -n liblbs-dbus
 %manifest liblbs-dbus.manifest
+%license LICENSE
 %defattr(-,root,root,-)
-#%doc COPYING
 %{_libdir}/*.so.*
-%{_prefix}/etc/dbus-1/system.d/*
-/usr/share/license/liblbs-dbus
+%{_sysconfdir}/dbus-1/system.d/*
 
 %files -n liblbs-dbus-devel
 %defattr(-,root,root,-)
