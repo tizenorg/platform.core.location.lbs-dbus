@@ -21,7 +21,6 @@ LBS dbus interface
 %package -n liblbs-dbus
 Summary:    LBS dbus library
 Group:      Location/Libraries
-Requires(post): sys-assert
 
 %description -n liblbs-dbus
 LBS client API library
