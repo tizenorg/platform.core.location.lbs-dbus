@@ -5,6 +5,7 @@ Release:    1
 Group:      Location/Service
 License:    Apache-2.0
 Source0:    lbs-dbus-%{version}.tar.gz
+Source1001: 	lbs-dbus.manifest
 BuildRequires:  cmake
 BuildRequires:  pkgconfig(glib-2.0)
 BuildRequires:  pkgconfig(gobject-2.0)
@@ -36,6 +37,7 @@ LBS client API library (devel)
 
 %prep
 %setup -q
+cp %{SOURCE1001} .
 
 
 %build
@@ -53,13 +55,14 @@ make %{?jobs:-j%jobs}
 
 
 %files -n liblbs-dbus
-%manifest liblbs-dbus.manifest
+%manifest %{name}.manifest
 %license LICENSE
 %defattr(-,root,root,-)
 %{_libdir}/*.so.*
 %{_sysconfdir}/dbus-1/system.d/*
 
 %files -n liblbs-dbus-devel
+%manifest %{name}.manifest
 %defattr(-,root,root,-)
 %{_includedir}/lbs-dbus/*.h
 %{_libdir}/pkgconfig/*.pc
