@@ -22,6 +22,8 @@ ADD_LIBRARY(lbs-dbus-server SHARED ${SRCS_S})
 TARGET_LINK_LIBRARIES(lbs-dbus-server ${pkgs_LDFLAGS})
 SET_TARGET_PROPERTIES(lbs-dbus-server PROPERTIES VERSION 0.1.0 SOVERSION 0 OUTPUT_NAME lbs-dbus-server)
 
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/res/lbs-dbus-server.conf.cmake ${CMAKE_CURRENT_SOURCE_DIR}/res/lbs-dbus-server.conf)
+
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/res/lbs-dbus-server.conf DESTINATION ${SYSCONFDIR}/dbus-1/system.d)
 INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/lbs_dbus_server.h DESTINATION include/lbs-dbus)
 INSTALL(TARGETS lbs-dbus-server DESTINATION ${LIB_INSTALL_DIR} COMPONENT Runtime)
