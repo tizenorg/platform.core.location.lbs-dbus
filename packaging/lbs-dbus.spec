@@ -14,6 +14,7 @@ BuildRequires:  pkgconfig(gio-2.0)
 BuildRequires:  pkgconfig(gio-unix-2.0)
 BuildRequires:  python
 BuildRequires:  python-xml
+BuildRequires:  pkgconfig(libtzplatform-config)
 
 %description
 LBS dbus interface
@@ -38,10 +39,9 @@ LBS client API library (devel)
 %setup -q
 cp %{SOURCE1001} .
 
-
 %build
-%cmake . 
-
+%cmake . \
+-DTZ_SYS_USER_GROUP=%TZ_SYS_USER_GROUP
 
 make %{?jobs:-j%jobs}
 
