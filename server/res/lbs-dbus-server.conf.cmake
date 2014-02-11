@@ -24,7 +24,7 @@
 		<allow receive_interface="org.tizen.lbs.Nmea"/>
 		<allow receive_interface="org.tizen.lbs.Satellite"/>
     </policy>
-    <policy user="app">
+    <policy group=@TZ_SYS_USER_GROUP@>
         <allow own="org.tizen.lbs"/>
 		<allow own="org.tizen.lbs.Manager"/>
 		<allow own="org.tizen.lbs.Providers.GpsManager"/>
