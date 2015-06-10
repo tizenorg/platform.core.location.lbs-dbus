@@ -1,5 +1,9 @@
 <node>
 	<interface name="org.tizen.lbs.Nmea">
+		<method name="GetNmea">
+			<arg direction="out" type="i" name="timestamp"/>
+			<arg direction="out" type="s" name="nmea_data"/>
+		</method>
 		<signal name="NmeaChanged">
 			<arg type="i" name="timestamp"/>
 			<arg type="s" name="nmea_data"/>

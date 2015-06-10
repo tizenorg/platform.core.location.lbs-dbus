@@ -1,0 +1,7 @@
+<node>
+	<interface name="org.tizen.lbs.Batch">
+		<signal name="BatchChanged">
+			<arg type="i" name="num_of_location" />
+		</signal>
+	</interface>
+</node>

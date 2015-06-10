@@ -4,7 +4,7 @@
  * Copyright (c) 2013 Samsung Electronics Co., Ltd. All rights reserved.
  *
  * Contact: Youngae Kang <youngae.kang@samsung.com>, Minjune Kim <sena06.kim@samsung.com>
- *		Genies Kim <daejins.kim@samsung.com>
+ *			Genie Kim <daejins.kim@samsung.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,10 +32,11 @@ __BEGIN_DECLS
 #define LOG_TAG "LBS_DBUS_CLIENT"
 #endif
 
-#define LBS_CLIENT_LOGI(fmt,args...)  { LOGI(fmt, ##args); }
-#define LBS_CLIENT_LOGD(fmt,args...)  { LOGD(fmt, ##args); }
-#define LBS_CLIENT_LOGW(fmt,args...)  { LOGW(fmt, ##args); }
-#define LBS_CLIENT_LOGE(fmt,args...)  { LOGE(fmt, ##args); }
+#define LBS_CLIENT_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
+#define LBS_CLIENT_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
+#define LBS_CLIENT_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
+#define LBS_CLIENT_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
+#define LBS_CLIENT_SECLOG(fmt,args...)	SECURE_LOGW(fmt, ##args)
 
 #else
 
@@ -43,6 +44,7 @@ __BEGIN_DECLS
 #define LBS_CLIENT_LOGD(fmt,args...)
 #define LBS_CLIENT_LOGW(fmt,args...)
 #define LBS_CLIENT_LOGE(fmt,args...)
+#define LBS_CLIENT_SECLOG(fmt,args...)
 
 #endif
 

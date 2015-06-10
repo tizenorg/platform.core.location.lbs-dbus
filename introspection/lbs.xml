@@ -8,15 +8,18 @@
 			<arg direction="out" type="i" name="status"/>
 		</method>
 		<signal name="StatusChanged">
+			<arg direction="in" type="i" name="method" />
 			<arg direction="out" type="i" name="status"/>
 		</signal>
 		<method name="SetOptions">
 			<arg direction="in" type="a{sv}" name="options"/>
 		</method>
 		<method name="AddReference">
+			<arg direction="in" type="i" name="method" />
 			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
 		</method>
 		<method name="RemoveReference">
+			<arg direction="in" type="i" name="method" />
 			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
 		</method>
 	</interface>
