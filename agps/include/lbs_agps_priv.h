@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#ifndef __LBS_DBUS_SERVER_PRIV_H__
-#define __LBS_DBUS_SERVER_PRIV_H__
+#ifndef __LBS_AGPS_PRIV_H__
+#define __LBS_AGPS_PRIV_H__
 
 __BEGIN_DECLS
 
@@ -29,26 +29,23 @@ __BEGIN_DECLS
 
 #ifdef LOG_TAG
 #undef LOG_TAG
-#define LOG_TAG "LBS_DBUS_SERVER"
+#define LOG_TAG "LBS_AGPS"
 #endif
 
-#define LBS_SERVER_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
-#define LBS_SERVER_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
-#define LBS_SERVER_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
-#define LBS_SERVER_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
-#define LBS_SERVER_SECLOG(fmt,args...)	{ SECURE_LOGD(fmt, ##args); }
+#define LBS_AGPS_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
+#define LBS_AGPS_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
+#define LBS_AGPS_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
+#define LBS_AGPS_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
 
 #else
 
-#define LBS_SERVER_LOGI(fmt,args...)
-#define LBS_SERVER_LOGD(fmt,args...)
-#define LBS_SERVER_LOGW(fmt,args...)
-#define LBS_SERVER_LOGE(fmt,args...)
-#define LBS_SERVER_SECLOG(fmt,args...)
+#define LBS_AGPS_LOGI(fmt,args...)
+#define LBS_AGPS_LOGD(fmt,args...)
+#define LBS_AGPS_LOGW(fmt,args...)
+#define LBS_AGPS_LOGE(fmt,args...)
 
 #endif
 
 __END_DECLS
-
 
 #endif

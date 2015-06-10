@@ -19,36 +19,30 @@
  * limitations under the License.
  */
 
-#ifndef __LBS_DBUS_SERVER_PRIV_H__
-#define __LBS_DBUS_SERVER_PRIV_H__
+#ifndef __LBS_AGPS_H__
+#define __LBS_AGPS_H__
 
 __BEGIN_DECLS
 
-#ifdef FEATURE_DLOG_DEBUG
-#include <dlog.h>
+#include <gio/gio.h>
 
-#ifdef LOG_TAG
-#undef LOG_TAG
-#define LOG_TAG "LBS_DBUS_SERVER"
-#endif
+typedef enum {
+    LBS_AGPS_ERROR_NONE = 0x0,
+    LBS_AGPS_ERROR_UNKNOWN,
+    LBS_AGPS_ERROR_PARAMETER,
+    LBS_AGPS_ERROR_MEMORY,
+    LBS_AGPS_ERROR_CONNECTION,
+    LBS_AGPS_ERROR_STATUS,
+    LBS_AGPS_ERROR_DBUS_CALL,
+    LBS_AGPS_ERROR_NO_RESULT,
+} lbs_agps_error_e;
 
-#define LBS_SERVER_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
-#define LBS_SERVER_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
-#define LBS_SERVER_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
-#define LBS_SERVER_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
-#define LBS_SERVER_SECLOG(fmt,args...)	{ SECURE_LOGD(fmt, ##args); }
-
-#else
-
-#define LBS_SERVER_LOGI(fmt,args...)
-#define LBS_SERVER_LOGD(fmt,args...)
-#define LBS_SERVER_LOGW(fmt,args...)
-#define LBS_SERVER_LOGE(fmt,args...)
-#define LBS_SERVER_SECLOG(fmt,args...)
-
-#endif
+int lbs_agps_sms(const char *msg_body, int msg_size);
+int lbs_agps_wap_push(const char *push_header, const char *push_body, int push_body_size);
+int lbs_set_option(const char *option);
 
 __END_DECLS
 
+#endif /* __LBS_AGPS_H__ */
 
-#endif
+

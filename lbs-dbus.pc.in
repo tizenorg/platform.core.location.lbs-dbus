@@ -7,5 +7,5 @@ Name: LBS dbus Library
 Description: LBS dbus library
 Requires: glib-2.0 gobject-2.0
 Version: 0.1
-Libs: -L${libdir} -llbs-dbus -llbs-dbus-server
+Libs: -L${libdir} -llbs-dbus -llbs-dbus-server -llbs-agps
 Cflags: -I${includedir}/lbs-dbus

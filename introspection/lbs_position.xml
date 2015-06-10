@@ -1,6 +1,7 @@
 <node>
 	<interface name="org.tizen.lbs.Position">
 		<signal name="PositionChanged">
+			<arg type="i" name="method" />
 			<arg type="i" name="fields" />
 			<arg type="i" name="timestamp" />
 			<arg type="d" name="latitude" />

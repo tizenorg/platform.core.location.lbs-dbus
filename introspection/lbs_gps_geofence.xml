@@ -1,0 +1,36 @@
+<node>
+	<interface name="org.tizen.lbs.GpsGeofence">
+		<method name="AddFence">
+			<arg direction="in" type="i" name="fence_id"/>
+			<arg direction="in" type="d" name="latitude"/>
+			<arg direction="in" type="d" name="longitude"/>
+			<arg direction="in" type="i" name="radius"/>
+			<arg direction="in" type="i" name="last_state"/>
+			<arg direction="in" type="i" name="monitor_states"/>
+			<arg direction="in" type="i" name="notification_responsiveness"/>
+			<arg direction="in" type="i" name="unknown_timer"/>
+		</method>
+		<method name="DeleteFence">
+			<arg direction="in" type="i" name="fence_id"/>
+		</method>
+		<method name="PauseFence">
+			<arg direction="in" type="i" name="fence_id"/>
+		</method>
+		<method name="ResumeFence">
+			<arg direction="in" type="i" name="fence_id"/>
+		</method>
+		<signal name="StatusChanged">
+			<arg direction="out" type="i" name="status"/>
+		</signal>
+		<signal name="GeofenceChanged">
+			<arg direction="out" type="i" name="fence_id"/>
+			<arg direction="out" type="i" name="transition"/>
+			<arg direction="out" type="d" name="latitude"/>
+			<arg direction="out" type="d" name="longitude"/>
+			<arg direction="out" type="d" name="altitude"/>
+			<arg direction="out" type="d" name="speed"/>
+			<arg direction="out" type="d" name="bearing"/>
+			<arg direction="out" type="d" name="accuracy"/>
+		</signal>
+	</interface>
+</node>
