@@ -1,9 +1,0 @@
-* Mon Jul 01 2013 Alexandru Cornea <alexandru.cornea@intel.com> ba0aa6f
-- resetting manifest requested domain to floor
-
-* Fri Jun 28 2013 Patrick McCarty <patrick.mccarty@linux.intel.com> c83f00d
-- packaging: remove explicit requires on sys-assert
-
-* Tue Jun 04 2013 Anas Nashif <anas.nashif@intel.com> submit/tizen/20130517.044934@56bc9cf
-- Remove hardcoding and fixed build
-
