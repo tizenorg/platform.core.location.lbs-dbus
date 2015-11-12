@@ -248,6 +248,8 @@ on_manager_addreference(LbsManager *mgr,
                         gpointer				user_data)
 {
 	LBS_SERVER_LOGD("method: %d", method);
+	if(method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
+
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
 	if (!ctx) {
 		return FALSE;
@@ -624,15 +626,19 @@ static void on_bus_acquired(GDBusConnection *conn, const gchar *name, gpointer u
 
 	/* create object for each interfaces*/
 	path = g_strdup_printf("%s/%s", ctx->service_path, "SAMSUNG");
-	object = lbs_object_skeleton_new(path);
-	ctx->obj_skeleton = object;
-
-	if (NULL != path) {
-		LBS_SERVER_LOGD("object path [%s], obj_skeleton [%p]", path, ctx->obj_skeleton);
-		g_free(path);
+	if (path == NULL) {
+		LBS_SERVER_LOGE("path is NULL");
 		path = NULL;
 	}
 
+	object = lbs_object_skeleton_new(path);
+	g_free(path);
+	if (object == NULL) {
+		LBS_SERVER_LOGE("Can't create object. path: %s", path);
+		return;
+	}
+
+	ctx->obj_skeleton = object;
 	lbs_dbus_setup_position_interface(object, ctx);
 	lbs_dbus_setup_batch_interface(object, ctx);
 	lbs_dbus_setup_satellite_interface(object, ctx);
@@ -680,33 +686,36 @@ static void on_bus_acquired(GDBusConnection *conn, const gchar *name, gpointer u
 
 	/* register callback for each methods for H/W gps-geofence */
 	LbsGpsGeofence *gps_geofence = NULL;
-	gps_geofence = lbs_object_get_gps_geofence(LBS_OBJECT(ctx->obj_skeleton));
-	g_return_if_fail(gps_geofence);
-	if (ctx->add_hw_fence_cb) {
-		ctx->add_hw_fence_h = g_signal_connect(gps_geofence,
-		                                       "handle-add-fence",
-		                                       G_CALLBACK(on_gps_geofence_addfence),
-		                                       ctx); /* user_data */
+	if (ctx->obj_skeleton) {
+		gps_geofence = lbs_object_get_gps_geofence(LBS_OBJECT(ctx->obj_skeleton));
+		if (gps_geofence) {
+			if (ctx->add_hw_fence_cb) {
+				ctx->add_hw_fence_h = g_signal_connect(gps_geofence,
+				                                       "handle-add-fence",
+				                                       G_CALLBACK(on_gps_geofence_addfence),
+				                                       ctx); /* user_data */
+			}
+			if (ctx->delete_hw_fence_cb) {
+				ctx->delete_hw_fence_h = g_signal_connect(gps_geofence,
+				                                          "handle-delete-fence",
+				                                          G_CALLBACK(on_gps_geofence_deletefence),
+				                                          ctx); /* user_data */
+			}
+			if (ctx->pause_hw_fence_cb) {
+				ctx->pause_hw_fence_h = g_signal_connect(gps_geofence,
+				                                         "handle-pause-fence",
+				                                         G_CALLBACK(on_gps_geofence_pausefence),
+				                                         ctx); /* user_data */
+			}
+			if (ctx->resume_hw_fence_cb) {
+				ctx->resume_hw_fence_h = g_signal_connect(gps_geofence,
+				                                          "handle-resume-fence",
+				                                          G_CALLBACK(on_gps_geofence_resumefence),
+				                                          ctx); /* user_data */
+			}
+			g_object_unref(gps_geofence);
+		}
 	}
-	if (ctx->delete_hw_fence_cb) {
-		ctx->delete_hw_fence_h = g_signal_connect(gps_geofence,
-		                                          "handle-delete-fence",
-		                                          G_CALLBACK(on_gps_geofence_deletefence),
-		                                          ctx); /* user_data */
-	}
-	if (ctx->pause_hw_fence_cb) {
-		ctx->pause_hw_fence_h = g_signal_connect(gps_geofence,
-		                                         "handle-pause-fence",
-		                                         G_CALLBACK(on_gps_geofence_pausefence),
-		                                         ctx); /* user_data */
-	}
-	if (ctx->resume_hw_fence_cb) {
-		ctx->resume_hw_fence_h = g_signal_connect(gps_geofence,
-		                                          "handle-resume-fence",
-		                                          G_CALLBACK(on_gps_geofence_resumefence),
-		                                          ctx); /* user_data */
-	}
-	g_object_unref(gps_geofence);
 
 	ctx->owner_changed_id = g_dbus_connection_signal_subscribe(conn,
 	                                                           "org.freedesktop.DBus",

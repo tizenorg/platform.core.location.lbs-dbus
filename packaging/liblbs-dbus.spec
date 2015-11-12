@@ -1,6 +1,6 @@
 Name:		liblbs-dbus
 Summary:	DBus interface for Location Based Service
-Version:	0.3.2
+Version:	0.3.4
 Release:	1
 Group:		Location/Libraries
 License:	Apache-2.0
@@ -42,7 +42,7 @@ export FFLAGS="$FFLAGS -DTIZEN_DEBUG_ENABLE"
 
 export CFLAGS+=" -Wno-unused-local-typedefs "
 #cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} 
-cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DBUILD_PKGTYPE=rpm -DLIBDIR=%{_libdir} -DINCLUDEDIR=%{_includedir}
+cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DLIBDIR=%{_libdir} -DINCLUDEDIR=%{_includedir}
 
 make %{?jobs:-j%jobs}
 
