@@ -381,11 +381,14 @@ static gboolean on_manager_removereference(LbsManager *mgr,
                                            int						method,
                                            gpointer				user_data)
 {
-	LBS_SERVER_LOGD("on_manager_removereference method:%d", method);
+	LBS_SERVER_LOGD("method: %d", method);
+	if(method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
+
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
 	if (!ctx) {
 		return FALSE;
 	}
+
 	const gchar *sender = NULL;
 	sender = g_dbus_method_invocation_get_sender(invocation);
 	if (!lbs_server_remove_client(ctx, sender, method)) {
