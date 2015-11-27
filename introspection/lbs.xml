@@ -22,5 +22,20 @@
 			<arg direction="in" type="i" name="method" />
 			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
 		</method>
+		<method name="SetMockLocation">
+			<arg direction="in" type="i" name="method"/>
+			<arg direction="in" type="d" name="latitude"/>
+			<arg direction="in" type="d" name="longitude"/>
+			<arg direction="in" type="d" name="altitude"/>
+			<arg direction="in" type="d" name="speed"/>
+			<arg direction="in" type="d" name="direction"/>
+			<arg direction="in" type="d" name="accuracy"/>
+			<!--
+			<arg direction="out" type="i" name="method"/>
+			<arg direction="out" type="i" name="status"/>
+			-->
+			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
+		</method>
+	
 	</interface>
 </node>
