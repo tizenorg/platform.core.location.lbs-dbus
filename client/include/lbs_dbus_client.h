@@ -34,6 +34,7 @@ typedef enum {
     LBS_CLIENT_METHOD_NPS,
     LBS_CLIENT_METHOD_AGPS,
     LBS_CLIENT_METHOD_GEOFENCE,
+    LBS_CLIENT_METHOD_MOCK,
 } lbs_client_method_e;
 
 typedef enum {
@@ -70,6 +71,12 @@ int lbs_client_stop_batch(lbs_client_dbus_h lbs_client);
 
 int lbs_client_get_nmea(lbs_client_dbus_h lbs_client, int *timestamp, char **nmea);
 int lbs_client_set_position_update_interval(lbs_client_dbus_h lbs_client, unsigned int interval);
+
+/* Tizen 3.0 */
+int lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
+	gint method, gdouble latitude, gdouble longitude, gdouble altitude,
+	gdouble speed, gdouble direction, gdouble accuracy,
+	lbs_client_cb callback, void *user_data);
 
 __END_DECLS
 

@@ -1,3 +1,9 @@
+[Version] lbs-dbus_1.0.0
+[Date] 20 January 2016
+[Changes] Supported mock location
+[Developer] Young-Ae Kang <youngae.kang@samsung.com>
+================================================================================
+
 [Version] lbs-dbus_0.3.4
 [Date] 12 November 2015
 [Changes] 1.Fixed memory corruption
