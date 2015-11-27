@@ -72,6 +72,12 @@ typedef struct _lbs_server_dbus_s {
 	GpsGeofenceDeleteFenceCB delete_hw_fence_cb;
 	GpsGeofencePauseFenceCB pause_hw_fence_cb;
 	GpsGeofenceResumeFenceCB resume_hw_fence_cb;
+
+	/* Tizen 3.0 */
+	guint set_mock_location_h;
+	LbsDbusSetMockLocationCB set_mock_location_cb;
+
+	//lbs_server_dbus_cb_t callback;
 } lbs_server_dbus_s;
 
 typedef enum {
@@ -79,6 +85,7 @@ typedef enum {
     LBS_SERVER_METHOD_NPS,
     LBS_SERVER_METHOD_AGPS,
     LBS_SERVER_METHOD_GEOFENCE,
+    LBS_SERVER_METHOD_MOCK,
     LBS_SERVER_METHOD_SIZE,
 } lbs_server_method_e;
 
@@ -160,8 +167,8 @@ static gboolean lbs_dbus_setup_gps_geofence_interface(LbsObjectSkeleton *object,
 
 static gboolean
 on_manager_getproviderinfo(LbsManager *mgr,
-                           GDBusMethodInvocation	*invocation,
-                           gpointer				user_data)
+                           GDBusMethodInvocation *invocation,
+                           gpointer user_data)
 {
 	LBS_SERVER_LOGD("on_manager_getproviderinfo");
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
@@ -180,8 +187,8 @@ on_manager_getproviderinfo(LbsManager *mgr,
 
 static gboolean
 on_manager_getstatus(LbsManager *mgr,
-                     GDBusMethodInvocation	*invocation,
-                     gpointer				user_data)
+                     GDBusMethodInvocation *invocation,
+                     gpointer user_data)
 {
 	LBS_SERVER_LOGD("on_manager_getstatus");
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
@@ -196,7 +203,7 @@ on_manager_getstatus(LbsManager *mgr,
 
 static gboolean
 on_nmea_getnmea(LbsNmea *nmea,
-                GDBusMethodInvocation	*invocation,
+                GDBusMethodInvocation *invocation,
                 gpointer user_data)
 {
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
@@ -220,8 +227,8 @@ on_nmea_getnmea(LbsNmea *nmea,
 static gboolean
 on_manager_setoptions(LbsManager *mgr,
                       GDBusMethodInvocation *invocation,
-                      GVariant	*options,
-                      gpointer	user_data)
+                      GVariant *options,
+                      gpointer user_data)
 {
 	LBS_SERVER_LOGD("ENTER >>>");
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
@@ -243,9 +250,9 @@ on_manager_setoptions(LbsManager *mgr,
 
 static gboolean
 on_manager_addreference(LbsManager *mgr,
-                        GDBusMethodInvocation	*invocation,
+                        GDBusMethodInvocation *invocation,
                         int method,
-                        gpointer				user_data)
+                        gpointer user_data)
 {
 	LBS_SERVER_LOGD("method: %d", method);
 	if(method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
@@ -368,8 +375,8 @@ lbs_server_remove_client(lbs_server_dbus_s *ctx, const char *client, int method)
 
 	if (ctx->shutdown_cb) {
 		ctx->shutdown_cb(ctx->userdata, shutdown_arr);
-		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d",
-		                shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS]);
+		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d, mock:%d",
+		                shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS], shutdown_arr[LBS_SERVER_METHOD_MOCK]);
 	}
 
 	g_free(shutdown_arr);
@@ -377,9 +384,9 @@ lbs_server_remove_client(lbs_server_dbus_s *ctx, const char *client, int method)
 }
 
 static gboolean on_manager_removereference(LbsManager *mgr,
-                                           GDBusMethodInvocation	*invocation,
-                                           int						method,
-                                           gpointer				user_data)
+                                           GDBusMethodInvocation *invocation,
+                                           int method,
+                                           gpointer user_data)
 {
 	LBS_SERVER_LOGD("method: %d", method);
 	if(method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
@@ -414,7 +421,7 @@ on_gps_geofence_addfence(LbsGpsGeofence *gps_geofence,
                          gint monitor_states,
                          gint notification_responsiveness,
                          gint unknown_timer,
-                         gpointer	user_data)
+                         gpointer user_data)
 {
 	LBS_SERVER_LOGD("on_gps_geofence_addfence");
 
@@ -435,9 +442,9 @@ on_gps_geofence_addfence(LbsGpsGeofence *gps_geofence,
 
 static gboolean
 on_gps_geofence_deletefence(LbsGpsGeofence *gps_geofence,
-                            GDBusMethodInvocation	*invocation,
-                            gint					fence_id,
-                            gpointer				user_data)
+                            GDBusMethodInvocation *invocation,
+                            gint fence_id,
+                            gpointer user_data)
 {
 	LBS_SERVER_LOGD("on_gps_geofence_deletefence");
 
@@ -457,7 +464,7 @@ on_gps_geofence_deletefence(LbsGpsGeofence *gps_geofence,
 
 static gboolean
 on_gps_geofence_pausefence(LbsGpsGeofence *gps_geofence,
-                           GDBusMethodInvocation	*invocation,
+                           GDBusMethodInvocation *invocation,
                            gint fence_id,
                            gpointer	user_data)
 {
@@ -480,10 +487,10 @@ on_gps_geofence_pausefence(LbsGpsGeofence *gps_geofence,
 
 static gboolean
 on_gps_geofence_resumefence(LbsGpsGeofence *gps_geofence,
-                            GDBusMethodInvocation	*invocation,
+                            GDBusMethodInvocation *invocation,
                             gint fence_id,
                             gint monitor_states,
-                            gpointer	user_data)
+                            gpointer user_data)
 {
 	LBS_SERVER_LOGD("on_gps_geofence_resumefence");
 
@@ -499,6 +506,40 @@ on_gps_geofence_resumefence(LbsGpsGeofence *gps_geofence,
 	}
 
 	lbs_gps_geofence_complete_resume_fence(gps_geofence, invocation);
+	return TRUE;
+}
+
+
+/* Tizen 3.0 */
+
+static gboolean
+on_manager_setmocklocation(LbsManager *mgr,
+                           GDBusMethodInvocation *invocation,
+                           gint method,
+                           gdouble latitude,
+                           gdouble longitude,
+                           gdouble altitude,
+                           gdouble speed,
+                           gdouble direction,
+                           gdouble accuracy,
+                           gpointer user_data)
+{
+	LBS_SERVER_LOGD("method: %d, method");
+	if(method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
+
+	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
+	if (!ctx) {
+		return FALSE;
+	}
+
+	if (ctx->set_mock_location_cb) {
+		ctx->set_mock_location_cb(method, latitude, longitude, altitude, speed, direction, accuracy, user_data);
+
+		LBS_SERVER_LOGD("set_mock_location_cb was called");
+	}
+
+	lbs_manager_complete_set_mock_location(mgr, invocation);
+
 	return TRUE;
 }
 
@@ -541,8 +582,8 @@ lbs_remove_client_by_force(const char *client, void *data)
 
 	if (ctx->shutdown_cb) {
 		ctx->shutdown_cb(ctx->userdata, shutdown_arr);
-		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d",
-		                shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS]);
+		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d, mock:%d",
+		                shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS], shutdown_arr[LBS_SERVER_METHOD_MOCK]);
 	}
 
 	if (ctx->update_interval_cb) {
@@ -580,12 +621,12 @@ lbs_scan_sender(char *key, char *value, gpointer user_data)
 
 static void
 on_name_owner_changed(GDBusConnection *connection,
-                      const gchar		*sender_name,
-                      const gchar		*object_path,
-                      const gchar		*interface_name,
-                      const gchar		*signal_name,
-                      GVariant		*parameters,	/* 1. service name 2. prev_owner 3. new_owner */
-                      gpointer		user_data)
+                      const gchar *sender_name,
+                      const gchar *object_path,
+                      const gchar *interface_name,
+                      const gchar *signal_name,
+                      GVariant *parameters,	/* 1. service name 2. prev_owner 3. new_owner */
+                      gpointer user_data)
 {
 	lbs_server_dbus_s *handle = (lbs_server_dbus_s *)user_data;
 	g_return_if_fail(handle);
@@ -680,6 +721,14 @@ static void on_bus_acquired(GDBusConnection *conn, const gchar *name, gpointer u
 		                                           ctx); /* user_data */
 	}
 
+	/* Tizen 3.0 */
+	if (ctx->set_mock_location_cb) {
+		ctx->set_mock_location_h = g_signal_connect(mgr,
+		                                           "handle-set-mock-location",
+		                                           G_CALLBACK(on_manager_setmocklocation),
+		                                           ctx);
+	}
+
 	/* Add interface for nmea method*/
 	LbsNmea *nmea = NULL;
 	nmea = lbs_nmea_skeleton_new();
@@ -734,7 +783,6 @@ static void on_bus_acquired(GDBusConnection *conn, const gchar *name, gpointer u
 
 	g_dbus_interface_skeleton_export(G_DBUS_INTERFACE_SKELETON(mgr), conn, ctx->service_path, NULL);
 	g_dbus_interface_skeleton_export(G_DBUS_INTERFACE_SKELETON(nmea), conn, ctx->service_path, NULL);
-	/*	g_dbus_interface_skeleton_export(G_DBUS_INTERFACE_SKELETON(nmea), conn, path, NULL); */
 
 	g_dbus_object_manager_server_set_connection(ctx->manager, conn);
 
@@ -944,17 +992,8 @@ lbs_server_create(char *service_name,
                   char *name,
                   char *description,
                   lbs_server_dbus_h *lbs_server,
-                  LbsDbusSetOptionsCB set_options_cb,
-                  LbsDbusShutdownCB shutdown_cb,
-                  LbsDbusUpdateIntervalCB update_interval_cb,
-                  LbsDbusRequestChangeIntervalCB request_change_interval_cb,
-                  LbsDbusGetNmeaCB get_nmea_cb,
-                  GpsGeofenceAddFenceCB add_hw_fence_cb,
-                  GpsGeofenceDeleteFenceCB delete_hw_fence_cb,
-                  GpsGeofencePauseFenceCB pause_hw_fence_cb,
-                  GpsGeofenceResumeFenceCB resume_hw_fence_cb,
+                  lbs_server_dbus_cb_t *lbs_server_cb,
                   gpointer userdata)
-
 {
 	LBS_SERVER_LOGD("ENTER >>>");
 	g_return_val_if_fail(service_name, LBS_SERVER_ERROR_PARAMETER);
@@ -982,17 +1021,23 @@ lbs_server_create(char *service_name,
 
 	server->connections = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_free);
 	server->userdata = userdata;
-	server->set_options_cb = set_options_cb;
-	server->shutdown_cb = shutdown_cb;
-	server->update_interval_cb = update_interval_cb;
-	server->request_change_interval_cb = request_change_interval_cb;
-	server->get_nmea_cb = get_nmea_cb;
+
+	//server->callback = lbs_server_cb;
+
+	server->set_options_cb = lbs_server_cb->set_options_cb;
+	server->shutdown_cb = lbs_server_cb->shutdown_cb;
+	server->update_interval_cb = lbs_server_cb->update_interval_cb;
+	server->request_change_interval_cb = lbs_server_cb->request_change_interval_cb;
+	server->get_nmea_cb = lbs_server_cb->get_nmea_cb;
+
+	/* Tizen 3.0 */
+	server->set_mock_location_cb = lbs_server_cb->set_mock_location_cb;
 
 	/* add H/W gps-gefence callbacks */
-	server->add_hw_fence_cb = add_hw_fence_cb;
-	server->delete_hw_fence_cb = delete_hw_fence_cb;
-	server->pause_hw_fence_cb = pause_hw_fence_cb;
-	server->resume_hw_fence_cb = resume_hw_fence_cb;
+	server->add_hw_fence_cb = lbs_server_cb->add_hw_fence_cb;
+	server->delete_hw_fence_cb = lbs_server_cb->delete_hw_fence_cb;
+	server->pause_hw_fence_cb = lbs_server_cb->pause_hw_fence_cb;
+	server->resume_hw_fence_cb = lbs_server_cb->resume_hw_fence_cb;
 
 	server->owner_id = g_bus_own_name(G_BUS_TYPE_SYSTEM,
 	                                  service_name,
@@ -1055,6 +1100,11 @@ lbs_server_destroy(lbs_server_dbus_h lbs_server)
 	if (handle->remove_reference_h) {
 		g_signal_handler_disconnect(lbs_mgr, handle->remove_reference_h);
 		handle->remove_reference_h = 0;
+	}
+
+	if (handle->set_mock_location_h) {
+		g_signal_handler_disconnect(lbs_mgr, handle->set_mock_location_h);
+		handle->set_mock_location_h = 0;
 	}
 	g_object_unref(lbs_mgr);
 

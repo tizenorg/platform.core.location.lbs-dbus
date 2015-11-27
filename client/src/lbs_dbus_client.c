@@ -43,6 +43,7 @@ typedef struct _lbs_client_dbus_s {
 	int privacy_evt_id;
 	lbs_client_cb user_cb;
 	lbs_client_cb batch_cb;
+	lbs_client_cb set_mock_cb;
 	void *user_data;
 } lbs_client_dbus_s;
 
@@ -961,7 +962,6 @@ lbs_client_get_nmea(lbs_client_dbus_h lbs_client, int *timestamp, char **nmea)
 				ret = LBS_CLIENT_ERROR_DBUS_CALL;
 			}
 			g_error_free(error);
-			lbs_client_signal_unsubcribe(handle);
 			return ret;
 		}
 
@@ -1042,6 +1042,7 @@ lbs_client_destroy(lbs_client_dbus_h lbs_client)
 
 	handle->user_cb = NULL;
 	handle->batch_cb = NULL;
+	handle->set_mock_cb = NULL;
 	handle->user_data = NULL;
 
 	if (handle->conn) {
@@ -1053,3 +1054,121 @@ lbs_client_destroy(lbs_client_dbus_h lbs_client)
 
 	return LBS_CLIENT_ERROR_NONE;
 }
+
+/* Tizen 3.0 */
+
+static void __dbus_set_location_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
+{
+	LBS_CLIENT_LOGD("ENTER >>>");
+
+	g_return_if_fail(source_object);
+	g_return_if_fail(res);
+
+	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)user_data;
+	GError *error = NULL;
+	gboolean success = FALSE;
+	gchar *sig = NULL;
+	GVariant *param = NULL;
+
+	LbsManager *proxy = (LbsManager *)source_object;
+
+	//TODO: lbs-server will send method and status via DBUS. Have to change lbs.xml
+	success = lbs_manager_call_set_mock_location_finish(proxy, res, &error);
+	if (success) {
+		if (handle && handle->set_mock_cb) {
+			sig = g_strdup("SetLocation");
+	 		param = g_variant_new("(ii)", LBS_CLIENT_METHOD_MOCK, 5); /* LBS_STATUS_BATCH + 1 */
+			handle->set_mock_cb(sig, param, handle->user_data);
+
+			g_free(sig);
+			g_variant_unref(param);
+		}
+	}
+	else {
+		LBS_CLIENT_LOGW("SetLocation failed!!!");
+		if (handle && handle->set_mock_cb) {
+			sig = g_strdup("SetLocation");
+	 		param = g_variant_new("(ii)", LBS_CLIENT_METHOD_MOCK, 6); /* LBS_STATUS_BATCH + 2 */
+			handle->set_mock_cb(sig, param, handle->user_data);
+
+			g_free(sig);
+			g_variant_unref(param);
+		}
+
+		if (error && error->message) {
+			if (error->code == G_DBUS_ERROR_ACCESS_DENIED) {
+				LBS_CLIENT_LOGE("Access denied. Msg[%s]", error->message);
+			} else {
+				LBS_CLIENT_LOGE("Fail to new proxy ErrCode[%d], Msg[%s]", error->code, error->message);
+			}
+			g_error_free(error);
+		}
+	}
+
+	LBS_CLIENT_LOGD("EXIT <<<");
+}
+
+EXPORT_API int
+lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
+	gint method,
+	gdouble latitude,
+	gdouble longitude,
+	gdouble altitude,
+	gdouble speed,
+	gdouble direction,
+	gdouble accuracy,
+	lbs_client_cb callback, void *user_data)
+{
+	LBS_CLIENT_LOGD("ENTER >>>");
+	g_return_val_if_fail(lbs_client, LBS_CLIENT_ERROR_PARAMETER);
+
+	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)lbs_client;
+	int ret = LBS_CLIENT_ERROR_NONE;
+
+	handle->set_mock_cb = callback;
+	handle->user_data = user_data;
+
+#if 0
+	lbs_manager_proxy_new(handle->conn,
+	                                G_DBUS_PROXY_FLAGS_NONE,
+	                                SERVICE_NAME,
+	                                SERVICE_PATH,
+	                                NULL,
+	                                __on_proxy_new,
+	                                handle);
+
+#endif
+	LbsManager *proxy = NULL;
+	GError *error = NULL;
+
+	proxy = lbs_manager_proxy_new_sync(handle->conn,
+	                                G_DBUS_PROXY_FLAGS_NONE,
+	                                SERVICE_NAME,
+	                                SERVICE_PATH,
+	                                NULL,
+	                                &error);
+
+	if (proxy) {
+		lbs_manager_call_set_mock_location(proxy, method, latitude, longitude, altitude, speed, direction, accuracy,
+			NULL, __dbus_set_location_callback, handle);
+
+		g_object_unref(proxy);
+		proxy = NULL;
+	}
+	else {
+		if (error && error->message) {
+			if (error->code == G_DBUS_ERROR_ACCESS_DENIED) {
+				LBS_CLIENT_LOGE("Access denied. Msg[%s]", error->message);
+				ret = LBS_CLIENT_ERROR_ACCESS_DENIED;
+			} else {
+				LBS_CLIENT_LOGE("Fail to new proxy ErrCode[%d], Msg[%s]", error->code, error->message);
+				ret = LBS_CLIENT_ERROR_DBUS_CALL;
+			}
+			g_error_free(error);
+		}
+	}
+	LBS_CLIENT_LOGD("EXIT <<<");
+
+	return ret;
+}
+

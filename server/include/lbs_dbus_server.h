@@ -68,6 +68,11 @@ typedef void (*GpsGeofenceDeleteFenceCB)(gint fence_id, gpointer userdata);
 typedef void (*GpsGeofencePauseFenceCB)(gint fence_id, gpointer userdata);
 typedef void (*GpsGeofenceResumeFenceCB)(gint fence_id, gint monitor_states, gpointer userdata);
 
+/* Tizen 3.0 */
+typedef void (*LbsDbusSetMockLocationCB)(int method, double latitude, double longtitude, double altitude,
+                                         double speed, double direction, double accuracy, gpointer userdata);
+
+
 typedef enum {
     LBS_SERVER_ERROR_NONE = 0x0,
     LBS_SERVER_ERROR_UNKNOWN,
@@ -80,6 +85,22 @@ typedef enum {
 } lbs_server_error_e;
 
 typedef void *lbs_server_dbus_h;
+
+/* Tizen 3.0 */
+typedef struct _lbs_server_dbus_cb_t {
+	LbsDbusSetOptionsCB set_options_cb;
+	LbsDbusShutdownCB shutdown_cb;
+	LbsDbusUpdateIntervalCB update_interval_cb;
+	LbsDbusRequestChangeIntervalCB request_change_interval_cb;
+	LbsDbusGetNmeaCB get_nmea_cb;
+	GpsGeofenceAddFenceCB add_hw_fence_cb;
+	GpsGeofenceDeleteFenceCB delete_hw_fence_cb;
+	GpsGeofencePauseFenceCB pause_hw_fence_cb;
+	GpsGeofenceResumeFenceCB resume_hw_fence_cb;
+
+	LbsDbusSetMockLocationCB set_mock_location_cb;
+} lbs_server_dbus_cb_t;
+
 
 int
 lbs_server_emit_position_changed(lbs_server_dbus_h lbs_server,
@@ -126,6 +147,8 @@ lbs_server_emit_gps_geofence_status_changed(lbs_server_dbus_h lbs_server, gint s
 int
 lbs_server_emit_gps_geofence_changed(lbs_server_dbus_h lbs_server, gint fence_id, gint transition, gdouble latitude, gdouble longitude, gdouble altitude, gdouble speed, gdouble bearing, gdouble hor_accuracy);
 
+
+#ifdef TIZEN_2_4
 int
 lbs_server_create(char *service_name,
                   char *service_path,
@@ -141,6 +164,19 @@ lbs_server_create(char *service_name,
                   GpsGeofenceDeleteFenceCB delete_hw_fence_cb,
                   GpsGeofencePauseFenceCB pause_hw_fence_cb,
                   GpsGeofenceResumeFenceCB resume_hw_fence_cb,
+                  gpointer userdata);
+
+#endif
+
+/* Tizen 3.0 */
+
+int
+lbs_server_create(char *service_name,
+                  char *service_path,
+                  char *name,
+                  char *description,
+                  lbs_server_dbus_h *lbs_server,
+                  lbs_server_dbus_cb_t *lbs_server_cb,
                   gpointer userdata);
 
 int
