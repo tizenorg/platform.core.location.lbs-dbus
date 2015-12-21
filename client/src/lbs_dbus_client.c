@@ -306,7 +306,7 @@ lbs_client_start_batch(lbs_client_dbus_h lbs_client, lbs_client_callback_e callb
 	LBS_CLIENT_LOGD("lbs_client_start_batch");
 
 	g_return_val_if_fail(lbs_client, LBS_CLIENT_ERROR_PARAMETER);
-	g_return_val_if_fail(callback_type, LBS_CLIENT_ERROR_PARAMETER);
+	g_return_val_if_fail(callback_type < LBS_CLIENT_LOCATION_CB || callback_type > LBS_CLIENT_BATCH_CB, LBS_CLIENT_ERROR_PARAMETER);
 
 	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)lbs_client;
 	g_return_val_if_fail(handle->is_started == FALSE, LBS_CLIENT_ERROR_STATUS);
@@ -596,7 +596,7 @@ lbs_client_start(lbs_client_dbus_h lbs_client, unsigned int interval, lbs_client
 	LBS_CLIENT_LOGD("lbs_client_start");
 
 	g_return_val_if_fail(lbs_client, LBS_CLIENT_ERROR_PARAMETER);
-	g_return_val_if_fail(callback_type, LBS_CLIENT_ERROR_PARAMETER);
+	g_return_val_if_fail(callback_type < LBS_CLIENT_LOCATION_CB || callback_type > LBS_CLIENT_BATCH_CB, LBS_CLIENT_ERROR_PARAMETER);
 
 	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)lbs_client;
 	g_return_val_if_fail(handle->is_started == FALSE, LBS_CLIENT_ERROR_STATUS);

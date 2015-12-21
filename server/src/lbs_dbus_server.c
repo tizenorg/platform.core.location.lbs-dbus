@@ -635,11 +635,12 @@ static void on_bus_acquired(GDBusConnection *conn, const gchar *name, gpointer u
 	}
 
 	object = lbs_object_skeleton_new(path);
-	g_free(path);
 	if (object == NULL) {
 		LBS_SERVER_LOGE("Can't create object. path: %s", path);
+		g_free(path);
 		return;
 	}
+	g_free(path);
 
 	ctx->obj_skeleton = object;
 	lbs_dbus_setup_position_interface(object, ctx);
