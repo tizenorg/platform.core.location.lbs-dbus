@@ -32,19 +32,19 @@ __BEGIN_DECLS
 #define LOG_TAG "LBS_DBUS_CLIENT"
 #endif
 
-#define LBS_CLIENT_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
-#define LBS_CLIENT_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
-#define LBS_CLIENT_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
-#define LBS_CLIENT_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
-#define LBS_CLIENT_SECLOG(fmt,args...)	SECURE_LOGW(fmt, ##args)
+#define LBS_CLIENT_LOGI(fmt, args...)	{ LOGI(fmt, ##args); }
+#define LBS_CLIENT_LOGD(fmt, args...)	{ LOGD(fmt, ##args); }
+#define LBS_CLIENT_LOGW(fmt, args...)	{ LOGW(fmt, ##args); }
+#define LBS_CLIENT_LOGE(fmt, args...)	{ LOGE(fmt, ##args); }
+#define LBS_CLIENT_SECLOG(fmt, args...)	SECURE_LOGW(fmt, ##args)
 
 #else
 
-#define LBS_CLIENT_LOGI(fmt,args...)
-#define LBS_CLIENT_LOGD(fmt,args...)
-#define LBS_CLIENT_LOGW(fmt,args...)
-#define LBS_CLIENT_LOGE(fmt,args...)
-#define LBS_CLIENT_SECLOG(fmt,args...)
+#define LBS_CLIENT_LOGI(fmt, args...)
+#define LBS_CLIENT_LOGD(fmt, args...)
+#define LBS_CLIENT_LOGW(fmt, args...)
+#define LBS_CLIENT_LOGE(fmt, args...)
+#define LBS_CLIENT_SECLOG(fmt, args...)
 
 #endif
 

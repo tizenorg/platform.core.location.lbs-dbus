@@ -32,19 +32,19 @@ __BEGIN_DECLS
 #define LOG_TAG "LBS_DBUS_SERVER"
 #endif
 
-#define LBS_SERVER_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
-#define LBS_SERVER_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
-#define LBS_SERVER_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
-#define LBS_SERVER_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
-#define LBS_SERVER_SECLOG(fmt,args...)	{ SECURE_LOGD(fmt, ##args); }
+#define LBS_SERVER_LOGI(fmt, args...)	{ LOGI(fmt, ##args); }
+#define LBS_SERVER_LOGD(fmt, args...)	{ LOGD(fmt, ##args); }
+#define LBS_SERVER_LOGW(fmt, args...)	{ LOGW(fmt, ##args); }
+#define LBS_SERVER_LOGE(fmt, args...)	{ LOGE(fmt, ##args); }
+#define LBS_SERVER_SECLOG(fmt, args...)	{ SECURE_LOGD(fmt, ##args); }
 
 #else
 
-#define LBS_SERVER_LOGI(fmt,args...)
-#define LBS_SERVER_LOGD(fmt,args...)
-#define LBS_SERVER_LOGW(fmt,args...)
-#define LBS_SERVER_LOGE(fmt,args...)
-#define LBS_SERVER_SECLOG(fmt,args...)
+#define LBS_SERVER_LOGI(fmt, args...)
+#define LBS_SERVER_LOGD(fmt, args...)
+#define LBS_SERVER_LOGW(fmt, args...)
+#define LBS_SERVER_LOGE(fmt, args...)
+#define LBS_SERVER_SECLOG(fmt, args...)
 
 #endif
 

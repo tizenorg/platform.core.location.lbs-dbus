@@ -32,17 +32,17 @@ __BEGIN_DECLS
 #define LOG_TAG "LBS_AGPS"
 #endif
 
-#define LBS_AGPS_LOGI(fmt,args...)	{ LOGI(fmt, ##args); }
-#define LBS_AGPS_LOGD(fmt,args...)	{ LOGD(fmt, ##args); }
-#define LBS_AGPS_LOGW(fmt,args...)	{ LOGW(fmt, ##args); }
-#define LBS_AGPS_LOGE(fmt,args...)	{ LOGE(fmt, ##args); }
+#define LBS_AGPS_LOGI(fmt, args...)	{ LOGI(fmt, ##args); }
+#define LBS_AGPS_LOGD(fmt, args...)	{ LOGD(fmt, ##args); }
+#define LBS_AGPS_LOGW(fmt, args...)	{ LOGW(fmt, ##args); }
+#define LBS_AGPS_LOGE(fmt, args...)	{ LOGE(fmt, ##args); }
 
 #else
 
-#define LBS_AGPS_LOGI(fmt,args...)
-#define LBS_AGPS_LOGD(fmt,args...)
-#define LBS_AGPS_LOGW(fmt,args...)
-#define LBS_AGPS_LOGE(fmt,args...)
+#define LBS_AGPS_LOGI(fmt, args...)
+#define LBS_AGPS_LOGD(fmt, args...)
+#define LBS_AGPS_LOGW(fmt, args...)
+#define LBS_AGPS_LOGE(fmt, args...)
 
 #endif
 

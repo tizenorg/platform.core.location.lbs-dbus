@@ -30,31 +30,31 @@ __BEGIN_DECLS
 #define SERVICE_PATH	"/org/tizen/lbs/Providers/LbsServer"
 
 typedef enum {
-    LBS_CLIENT_METHOD_GPS = 0,
-    LBS_CLIENT_METHOD_NPS,
-    LBS_CLIENT_METHOD_AGPS,
-    LBS_CLIENT_METHOD_GEOFENCE,
-    LBS_CLIENT_METHOD_MOCK,
+	LBS_CLIENT_METHOD_GPS = 0,
+	LBS_CLIENT_METHOD_NPS,
+	LBS_CLIENT_METHOD_AGPS,
+	LBS_CLIENT_METHOD_GEOFENCE,
+	LBS_CLIENT_METHOD_MOCK,
 } lbs_client_method_e;
 
 typedef enum {
-    LBS_CLIENT_LOCATION_CB = 0x01,
-    LBS_CLIENT_LOCATION_STATUS_CB = LBS_CLIENT_LOCATION_CB << 0x01,
-    LBS_CLIENT_SATELLITE_CB = LBS_CLIENT_LOCATION_CB << 0x02,
-    LBS_CLIENT_NMEA_CB = LBS_CLIENT_LOCATION_CB << 0x03,
-    LBS_CLIENT_BATCH_CB = LBS_CLIENT_LOCATION_CB << 0x04,
+	LBS_CLIENT_LOCATION_CB = 0x01,
+	LBS_CLIENT_LOCATION_STATUS_CB = LBS_CLIENT_LOCATION_CB << 0x01,
+	LBS_CLIENT_SATELLITE_CB = LBS_CLIENT_LOCATION_CB << 0x02,
+	LBS_CLIENT_NMEA_CB = LBS_CLIENT_LOCATION_CB << 0x03,
+	LBS_CLIENT_BATCH_CB = LBS_CLIENT_LOCATION_CB << 0x04,
 } lbs_client_callback_e;
 
 typedef enum {
-    LBS_CLIENT_ERROR_NONE = 0x0,
-    LBS_CLIENT_ERROR_UNKNOWN,
-    LBS_CLIENT_ERROR_PARAMETER,
-    LBS_CLIENT_ERROR_MEMORY,
-    LBS_CLIENT_ERROR_CONNECTION,
-    LBS_CLIENT_ERROR_STATUS,
-    LBS_CLIENT_ERROR_DBUS_CALL,
-    LBS_CLIENT_ERROR_NO_RESULT,
-    LBS_CLIENT_ERROR_ACCESS_DENIED,
+	LBS_CLIENT_ERROR_NONE = 0x0,
+	LBS_CLIENT_ERROR_UNKNOWN,
+	LBS_CLIENT_ERROR_PARAMETER,
+	LBS_CLIENT_ERROR_MEMORY,
+	LBS_CLIENT_ERROR_CONNECTION,
+	LBS_CLIENT_ERROR_STATUS,
+	LBS_CLIENT_ERROR_DBUS_CALL,
+	LBS_CLIENT_ERROR_NO_RESULT,
+	LBS_CLIENT_ERROR_ACCESS_DENIED,
 } lbs_client_error_e;
 
 typedef void *lbs_client_dbus_h;
@@ -74,9 +74,7 @@ int lbs_client_set_position_update_interval(lbs_client_dbus_h lbs_client, unsign
 
 /* Tizen 3.0 */
 int lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
-	gint method, gdouble latitude, gdouble longitude, gdouble altitude,
-	gdouble speed, gdouble direction, gdouble accuracy,
-	lbs_client_cb callback, void *user_data);
+	gint method, gdouble latitude, gdouble longitude, gdouble altitude, gdouble speed, gdouble direction, gdouble accuracy, lbs_client_cb callback, void *user_data);
 
 __END_DECLS
 
