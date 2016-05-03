@@ -191,7 +191,7 @@ static void __privacy_setting_changed(GDBusConnection *conn, const gchar *name, 
 		return;
 	}
 
-	LBS_CLIENT_LOGD("[%s]'s location privacy is changed", pkg_id, privacy_id);
+	LBS_CLIENT_LOGD("[%s]'s [%s] location privacy is changed", pkg_id, privacy_id);
 	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)user_data;
 
 	if (handle == NULL || handle->is_started == FALSE) {
