@@ -488,7 +488,7 @@ on_manager_setmocklocation(LbsManager *mgr,
 		return FALSE;
 
 	if (ctx->set_mock_location_cb) {
-		ctx->set_mock_location_cb(method, latitude, longitude, altitude, speed, direction, accuracy, user_data);
+		ctx->set_mock_location_cb(method, latitude, longitude, altitude, speed, direction, accuracy, ctx->userdata);
 
 		LBS_SERVER_LOGD("set_mock_location_cb was called");
 	}
