@@ -66,8 +66,8 @@ int lbs_client_destroy(lbs_client_dbus_h lbs_client);
 
 int lbs_client_start(lbs_client_dbus_h lbs_client, unsigned int interval, lbs_client_callback_e callback_type, lbs_client_cb callback, void *user_data);
 int lbs_client_stop(lbs_client_dbus_h lbs_client);
-int lbs_client_start_batch(lbs_client_dbus_h lbs_client, lbs_client_callback_e callback_type, lbs_client_cb callback, unsigned int batch_interval, unsigned int batch_period, void *user_data);
-int lbs_client_stop_batch(lbs_client_dbus_h lbs_client);
+int lbs_client_batch_start(lbs_client_dbus_h lbs_client, lbs_client_callback_e callback_type, lbs_client_cb callback, unsigned int batch_interval, unsigned int batch_period, void *user_data);
+int lbs_client_batch_stop(lbs_client_dbus_h lbs_client);
 
 int lbs_client_get_nmea(lbs_client_dbus_h lbs_client, int *timestamp, char **nmea);
 int lbs_client_set_position_update_interval(lbs_client_dbus_h lbs_client, unsigned int interval);

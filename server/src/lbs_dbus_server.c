@@ -480,7 +480,7 @@ on_manager_setmocklocation(LbsManager *mgr,
 						   gdouble accuracy,
 						   gpointer user_data)
 {
-	LBS_SERVER_LOGD("method: %d", method);
+	LBS_SERVER_LOGD("on_manager_setmocklocation [method: %d]", method);
 	if (method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
 
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;

@@ -5,7 +5,7 @@ Release:	1
 Group:		Location/Libraries
 License:	Apache-2.0
 Source0:    %{name}-%{version}.tar.gz
-Source1001: 	%{name}.manifest
+Source1001:	%{name}.manifest
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 BuildRequires:	cmake
@@ -41,7 +41,6 @@ export CXXFLAGS="$CXXFLAGS -DTIZEN_DEBUG_ENABLE"
 export FFLAGS="$FFLAGS -DTIZEN_DEBUG_ENABLE"
 
 export CFLAGS+=" -Wno-unused-local-typedefs "
-#cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} 
 cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix} -DLIBDIR=%{_libdir} -DINCLUDEDIR=%{_includedir}
 
 make %{?jobs:-j%jobs}
