@@ -36,6 +36,5 @@
 			-->
 			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
 		</method>
-	
 	</interface>
 </node>

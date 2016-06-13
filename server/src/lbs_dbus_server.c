@@ -469,18 +469,11 @@ on_gps_geofence_resumefence(LbsGpsGeofence *gps_geofence, GDBusMethodInvocation 
 /* Tizen 3.0 */
 
 static gboolean
-on_manager_setmocklocation(LbsManager *mgr,
-						   GDBusMethodInvocation *invocation,
-						   gint method,
-						   gdouble latitude,
-						   gdouble longitude,
-						   gdouble altitude,
-						   gdouble speed,
-						   gdouble direction,
-						   gdouble accuracy,
-						   gpointer user_data)
+on_manager_setmocklocation(LbsManager *mgr, GDBusMethodInvocation *invocation, gint method,
+							gdouble latitude, gdouble longitude, gdouble altitude,
+							gdouble speed, gdouble direction, gdouble accuracy, gpointer user_data)
 {
-	LBS_SERVER_LOGD("method: %d", method);
+	LBS_SERVER_LOGD("on_manager_setmocklocation [method: %d]", method);
 	if (method < 0 || method >= LBS_SERVER_METHOD_SIZE) return FALSE;
 
 	lbs_server_dbus_s *ctx = (lbs_server_dbus_s *)user_data;
@@ -488,7 +481,7 @@ on_manager_setmocklocation(LbsManager *mgr,
 		return FALSE;
 
 	if (ctx->set_mock_location_cb) {
-		ctx->set_mock_location_cb(method, latitude, longitude, altitude, speed, direction, accuracy, user_data);
+		ctx->set_mock_location_cb(method, latitude, longitude, altitude, speed, direction, accuracy, ctx->userdata);
 
 		LBS_SERVER_LOGD("set_mock_location_cb was called");
 	}

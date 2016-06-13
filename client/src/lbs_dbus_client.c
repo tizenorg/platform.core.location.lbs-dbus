@@ -291,9 +291,9 @@ lbs_client_privacy_signal_unsubcribe(lbs_client_dbus_h lbs_client)
 }
 
 EXPORT_API int
-lbs_client_start_batch(lbs_client_dbus_h lbs_client, lbs_client_callback_e callback_type, lbs_client_cb callback, unsigned int batch_interval, unsigned int batch_period, void *user_data)
+lbs_client_batch_start(lbs_client_dbus_h lbs_client, lbs_client_callback_e callback_type, lbs_client_cb callback, unsigned int batch_interval, unsigned int batch_period, void *user_data)
 {
-	LBS_CLIENT_LOGD("lbs_client_start_batch");
+	LBS_CLIENT_LOGD("lbs_client_batch_start");
 
 	g_return_val_if_fail(lbs_client, LBS_CLIENT_ERROR_PARAMETER);
 	g_return_val_if_fail(callback_type >= LBS_CLIENT_LOCATION_CB && callback_type <= LBS_CLIENT_BATCH_CB, LBS_CLIENT_ERROR_PARAMETER);
@@ -466,9 +466,9 @@ lbs_client_set_position_update_interval(lbs_client_dbus_h lbs_client, unsigned i
 }
 
 EXPORT_API int
-lbs_client_stop_batch(lbs_client_dbus_h lbs_client)
+lbs_client_batch_stop(lbs_client_dbus_h lbs_client)
 {
-	LBS_CLIENT_LOGD("lbs_client_stop_batch");
+	LBS_CLIENT_LOGD("lbs_client_batch_stop");
 
 	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)lbs_client;
 	g_return_val_if_fail(handle, LBS_CLIENT_ERROR_PARAMETER);
@@ -959,7 +959,7 @@ lbs_client_destroy(lbs_client_dbus_h lbs_client)
 
 static void __dbus_set_location_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	LBS_CLIENT_LOGD("ENTER >>>");
+	LBS_CLIENT_LOGD("ENTER >>> __dbus_set_location_callback");
 
 	g_return_if_fail(source_object);
 	g_return_if_fail(res);
@@ -1018,7 +1018,7 @@ lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
 	gdouble accuracy,
 	lbs_client_cb callback, void *user_data)
 {
-	LBS_CLIENT_LOGD("ENTER >>>");
+	LBS_CLIENT_LOGD("ENTER >>> lbs_client_set_mock_location_async");
 	g_return_val_if_fail(lbs_client, LBS_CLIENT_ERROR_PARAMETER);
 
 	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)lbs_client;
@@ -1030,16 +1030,12 @@ lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
 	LbsManager *proxy = NULL;
 	GError *error = NULL;
 
-	proxy = lbs_manager_proxy_new_sync(handle->conn,
-									G_DBUS_PROXY_FLAGS_NONE,
-									SERVICE_NAME,
-									SERVICE_PATH,
-									NULL,
-									&error);
+	proxy = lbs_manager_proxy_new_sync(handle->conn, G_DBUS_PROXY_FLAGS_NONE,
+									SERVICE_NAME, SERVICE_PATH, NULL, &error);
 
 	if (proxy) {
-		lbs_manager_call_set_mock_location(proxy, method, latitude, longitude, altitude, speed, direction, accuracy,
-			NULL, __dbus_set_location_callback, handle);
+		lbs_manager_call_set_mock_location(proxy, method, latitude, longitude, altitude, speed, direction,
+											accuracy, NULL, __dbus_set_location_callback, handle);
 
 		g_object_unref(proxy);
 		proxy = NULL;
