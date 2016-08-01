@@ -350,8 +350,8 @@ lbs_server_remove_client(lbs_server_dbus_s *ctx, const char *client, int method)
 
 	if (ctx->shutdown_cb) {
 		ctx->shutdown_cb(ctx->userdata, shutdown_arr);
-		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d, mock:%d",
-						shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS], shutdown_arr[LBS_SERVER_METHOD_MOCK]);
+		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d",
+						shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS]);
 	}
 
 	g_free(shutdown_arr);
@@ -529,8 +529,8 @@ lbs_remove_client_by_force(const char *client, void *data)
 
 	if (ctx->shutdown_cb) {
 		ctx->shutdown_cb(ctx->userdata, shutdown_arr);
-		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d, mock:%d",
-						shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS], shutdown_arr[LBS_SERVER_METHOD_MOCK]);
+		LBS_SERVER_LOGD("shutdown_cb called.. gps:%d, nps:%d",
+						shutdown_arr[LBS_SERVER_METHOD_GPS], shutdown_arr[LBS_SERVER_METHOD_NPS]);
 	}
 
 	if (ctx->update_interval_cb) {
@@ -708,7 +708,6 @@ lbs_server_emit_position_changed(lbs_server_dbus_h lbs_server,
 								gint arg_method, gint arg_fields, gint arg_timestamp, gdouble arg_latitude, gdouble arg_longitude, gdouble arg_altitude,
 								gdouble arg_speed, gdouble arg_direction, gdouble arg_climb, GVariant *arg_accuracy)
 {
-	LBS_SERVER_LOGD("method:%d", arg_method);
 	g_return_val_if_fail(lbs_server, LBS_SERVER_ERROR_PARAMETER);
 	g_return_val_if_fail(arg_accuracy, LBS_SERVER_ERROR_PARAMETER);
 

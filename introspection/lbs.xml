@@ -30,10 +30,6 @@
 			<arg direction="in" type="d" name="speed"/>
 			<arg direction="in" type="d" name="direction"/>
 			<arg direction="in" type="d" name="accuracy"/>
-			<!--
-			<arg direction="out" type="i" name="method"/>
-			<arg direction="out" type="i" name="status"/>
-			-->
 			<annotation name="org.freedesktop.DBus.GLib.Async" value=""/>
 		</method>
 	</interface>

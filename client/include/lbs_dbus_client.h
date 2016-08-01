@@ -75,6 +75,7 @@ int lbs_client_set_position_update_interval(lbs_client_dbus_h lbs_client, unsign
 /* Tizen 3.0 */
 int lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
 	gint method, gdouble latitude, gdouble longitude, gdouble altitude, gdouble speed, gdouble direction, gdouble accuracy, lbs_client_cb callback, void *user_data);
+//int lbs_client_clear_mock_location(lbs_client_dbus_h lbs_client);
 
 __END_DECLS
 

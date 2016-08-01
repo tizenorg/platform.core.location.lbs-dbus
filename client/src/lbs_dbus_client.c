@@ -43,7 +43,6 @@ typedef struct _lbs_client_dbus_s {
 	int privacy_evt_id;
 	lbs_client_cb user_cb;
 	lbs_client_cb batch_cb;
-	lbs_client_cb set_mock_cb;
 	void *user_data;
 } lbs_client_dbus_s;
 
@@ -636,9 +635,8 @@ lbs_client_start(lbs_client_dbus_h lbs_client, unsigned int interval, lbs_client
 
 	param = g_variant_ref_sink(g_variant_new("(@a{sv})", g_variant_builder_end(builder)));
 	method = g_variant_ref_sink(g_variant_new("(i)", handle->method));
-	proxy = g_dbus_proxy_new_sync(handle->conn,  /* GDBusConnection */
-								  G_DBUS_PROXY_FLAGS_NONE, /* GDbusProxyFlags */
-								  NULL, SERVICE_NAME, SERVICE_PATH, "org.tizen.lbs.Manager", NULL, &error);
+	proxy = g_dbus_proxy_new_sync(handle->conn, G_DBUS_PROXY_FLAGS_NONE, NULL,
+									SERVICE_NAME, SERVICE_PATH, "org.tizen.lbs.Manager", NULL, &error);
 
 	if (error && error->message) {
 		if (error->code == G_DBUS_ERROR_ACCESS_DENIED) {
@@ -749,9 +747,8 @@ lbs_client_stop(lbs_client_dbus_h lbs_client)
 	method = g_variant_ref_sink(g_variant_new("(i)", handle->method));
 
 	GDBusProxy *proxy = NULL;
-	proxy = g_dbus_proxy_new_sync(handle->conn,  /* GDBusConnection */
-								  G_DBUS_PROXY_FLAGS_NONE, /*GDbusProxyFlags */
-								  NULL, SERVICE_NAME, SERVICE_PATH, "org.tizen.lbs.Manager", NULL, &error);
+	proxy = g_dbus_proxy_new_sync(handle->conn, G_DBUS_PROXY_FLAGS_NONE, NULL,
+								SERVICE_NAME, SERVICE_PATH, "org.tizen.lbs.Manager", NULL, &error);
 
 	if (error && error->message) {
 		if (error->code == G_DBUS_ERROR_ACCESS_DENIED) {
@@ -942,7 +939,6 @@ lbs_client_destroy(lbs_client_dbus_h lbs_client)
 
 	handle->user_cb = NULL;
 	handle->batch_cb = NULL;
-	handle->set_mock_cb = NULL;
 	handle->user_data = NULL;
 
 	if (handle->conn) {
@@ -959,40 +955,19 @@ lbs_client_destroy(lbs_client_dbus_h lbs_client)
 
 static void __dbus_set_location_callback(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-	LBS_CLIENT_LOGD("ENTER >>> __dbus_set_location_callback");
+	LBS_CLIENT_LOGD(">>> __dbus_set_location_callback");
 
 	g_return_if_fail(source_object);
 	g_return_if_fail(res);
 
-	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)user_data;
 	GError *error = NULL;
 	gboolean success = FALSE;
-	gchar *sig = NULL;
-	GVariant *param = NULL;
-
 	LbsManager *proxy = (LbsManager *)source_object;
 
 	/* TODO: lbs-server will send method and status via DBUS. Have to change lbs.xml */
 	success = lbs_manager_call_set_mock_location_finish(proxy, res, &error);
-	if (success) {
-		if (handle && handle->set_mock_cb) {
-			sig = g_strdup("SetLocation");
-			param = g_variant_new("(ii)", LBS_CLIENT_METHOD_MOCK, 5); /* LBS_STATUS_BATCH + 1 */
-			handle->set_mock_cb(sig, param, handle->user_data);
-
-			g_free(sig);
-			g_variant_unref(param);
-		}
-	} else {
+	if (success != TRUE) {
 		LBS_CLIENT_LOGW("SetLocation failed!!!");
-		if (handle && handle->set_mock_cb) {
-			sig = g_strdup("SetLocation");
-			param = g_variant_new("(ii)", LBS_CLIENT_METHOD_MOCK, 6); /* LBS_STATUS_BATCH + 2 */
-			handle->set_mock_cb(sig, param, handle->user_data);
-
-			g_free(sig);
-			g_variant_unref(param);
-		}
 
 		if (error && error->message) {
 			if (error->code == G_DBUS_ERROR_ACCESS_DENIED)
@@ -1003,20 +978,12 @@ static void __dbus_set_location_callback(GObject *source_object, GAsyncResult *r
 			g_error_free(error);
 		}
 	}
-
-	LBS_CLIENT_LOGD("EXIT <<<");
 }
 
 EXPORT_API int
-lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
-	gint method,
-	gdouble latitude,
-	gdouble longitude,
-	gdouble altitude,
-	gdouble speed,
-	gdouble direction,
-	gdouble accuracy,
-	lbs_client_cb callback, void *user_data)
+lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client, gint method,
+	gdouble latitude, gdouble longitude, gdouble altitude, gdouble speed, gdouble direction,
+	gdouble accuracy, lbs_client_cb callback, void *user_data)
 {
 	LBS_CLIENT_LOGD("ENTER >>> lbs_client_set_mock_location_async");
 	g_return_val_if_fail(lbs_client, LBS_CLIENT_ERROR_PARAMETER);
@@ -1024,14 +991,12 @@ lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
 	lbs_client_dbus_s *handle = (lbs_client_dbus_s *)lbs_client;
 	int ret = LBS_CLIENT_ERROR_NONE;
 
-	handle->set_mock_cb = callback;
 	handle->user_data = user_data;
 
 	LbsManager *proxy = NULL;
 	GError *error = NULL;
 
-	proxy = lbs_manager_proxy_new_sync(handle->conn, G_DBUS_PROXY_FLAGS_NONE,
-									SERVICE_NAME, SERVICE_PATH, NULL, &error);
+	proxy = lbs_manager_proxy_new_sync(handle->conn, G_DBUS_PROXY_FLAGS_NONE, SERVICE_NAME, SERVICE_PATH, NULL, &error);
 
 	if (proxy) {
 		lbs_manager_call_set_mock_location(proxy, method, latitude, longitude, altitude, speed, direction,
@@ -1051,7 +1016,7 @@ lbs_client_set_mock_location_async(lbs_client_dbus_h lbs_client,
 			g_error_free(error);
 		}
 	}
-	LBS_CLIENT_LOGD("EXIT <<<");
 
 	return ret;
 }
+
